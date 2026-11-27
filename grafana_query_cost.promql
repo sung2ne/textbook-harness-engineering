@@ -1,0 +1,2 @@
+sum(increase(gen_ai_client_token_usage_sum{gen_ai_token_type="input", gen_ai_response_model="claude-opus-5-5"}[1h])) * 0.000004
++ sum(increase(gen_ai_client_token_usage_sum{gen_ai_token_type="output", gen_ai_response_model="claude-opus-5-5"}[1h])) * 0.000020

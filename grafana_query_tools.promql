@@ -1,0 +1,3 @@
+sum by (gen_ai_tool_name) (
+  rate(traces_spanmetrics_calls_total{span_name=~"execute_tool .*"}[1h])
+)

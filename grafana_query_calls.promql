@@ -1,0 +1,4 @@
+sum(rate(traces_spanmetrics_calls_total{
+  service_name="code-review-agent",
+  span_name="agent.run"
+}[1m])) * 60
