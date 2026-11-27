@@ -1,0 +1,15 @@
+groups:
+  - name: llm-performance
+    rules:
+      - alert: LatencyRegression
+        expr: |
+          (
+            histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_latency_bucket[15m])))
+            /
+            histogram_quantile(0.95, sum by (le) (rate(traces_spanmetrics_latency_bucket[15m] offset 1d)))
+          ) > 1.3
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "p95 latency가 어제 같은 시간대 대비 30% 이상 증가 (지속 10분)"

@@ -1,0 +1,12 @@
+groups:
+  - name: llm-quality
+    rules:
+      - alert: NegativeFeedbackSpike
+        expr: |
+          sum(rate(user_feedback_total{value="negative"}[1h])) /
+          sum(rate(user_feedback_total[1h])) > 0.15
+        for: 30m
+        labels:
+          severity: warning
+        annotations:
+          summary: "부정 피드백 비율이 15% 초과"

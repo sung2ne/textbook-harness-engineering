@@ -1,0 +1,18 @@
+groups:
+  - name: llm-availability
+    rules:
+      - alert: AnthropicAPIDown
+        expr: |
+          sum(rate(traces_spanmetrics_calls_total{
+            gen_ai_provider_name="anthropic",
+            status_code="STATUS_CODE_ERROR"
+          }[5m]))
+          /
+          sum(rate(traces_spanmetrics_calls_total{
+            gen_ai_provider_name="anthropic"
+          }[5m])) > 0.5
+        for: 2m
+        labels:
+          severity: page
+        annotations:
+          summary: "Anthropic API 에러율 50% 초과 (지속 2분)"
