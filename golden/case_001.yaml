@@ -1,0 +1,18 @@
+case_id: "001"
+input:
+  diff: |
+    ...
+    + String userInputSql = request.getParameter("sql");
+    + jdbc.execute(userInputSql);
+expected_key_points:
+  - "SQL injection 위험을 명시"
+  - "PreparedStatement 또는 ORM 사용 제안"
+  - "정중한 톤"
+expected_violations:
+  - rule_id: 2
+    description: "외부 입력 검증 누락"
+score_breakdown:
+  detect_sql_injection: 4
+  suggest_fix: 3
+  tone: 2
+  no_secret_leak: 1
