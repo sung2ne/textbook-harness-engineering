@@ -1,18 +1,27 @@
 case_id: "001"
-input:
-  diff: |
-    ...
-    + String userInputSql = request.getParameter("sql");
-    + jdbc.execute(userInputSql);
-expected_key_points:
-  - "SQL injection 위험을 명시"
-  - "PreparedStatement 또는 ORM 사용 제안"
-  - "정중한 톤"
+repo: company/payment-api
+pr_number: 4521
+title: "Add user registration endpoint"
+diff: |
+  +    @PostMapping("/register")
+  +    public User register(@RequestBody Map<String, String> body) {
+  +        String pwd = body.get("password");
+  +        User u = new User(body.get("email"), pwd);
+  +        return userRepo.save(u);
+  +    }
 expected_violations:
+  - rule_id: 4
+    severity: blocker
+    file: UserController.java
+    description: "비밀번호 평문 저장"
   - rule_id: 2
-    description: "외부 입력 검증 누락"
-score_breakdown:
-  detect_sql_injection: 4
-  suggest_fix: 3
-  tone: 2
-  no_secret_leak: 1
+    severity: warning
+    file: UserController.java
+    description: "외부 입력(Map)을 검증 없이 사용"
+expected_score:
+  detect_rate: 30
+  false_positive: 20
+  tone: 20
+  specificity: 12
+  rule_match: 14
+  total: 96
