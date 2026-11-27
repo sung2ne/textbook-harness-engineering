@@ -1,0 +1,19 @@
+SYSTEM_PROMPT = f"""\
+## 역할
+{ROLE}
+
+## 맥락
+{CONTEXT}
+
+## 제약
+{GOLDEN_RULES}
+
+{REFUSAL_TEMPLATE}
+
+{ESCALATION_TEMPLATE}
+
+{FALLBACK_TEMPLATE}
+
+## 예시
+{EXAMPLES}
+"""
