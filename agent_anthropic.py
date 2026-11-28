@@ -11,7 +11,7 @@ def run(user_message: str) -> str:
     while True:
         response = client.messages.create(
             model=MODEL,
-            max_tokens=1024,
+            max_tokens=4096,  # thinking 토큰도 max_tokens 안에서 쓰인다
             tools=[ANTHROPIC_TOOL],
             messages=messages,
         )
