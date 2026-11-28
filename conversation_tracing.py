@@ -1,3 +1,8 @@
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+
 def call_in_conversation(conv_id: str, message: str):
     with tracer.start_as_current_span("agent.turn") as span:
         span.set_attribute("gen_ai.conversation.id", conv_id)
