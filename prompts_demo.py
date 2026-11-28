@@ -1,3 +1,8 @@
+from mcp.server import MCPServer
+
+mcp = MCPServer("policy-server")
+
+
 @mcp.prompt()
 def code_review(diff_url: str) -> list[dict]:
     """PR 디프 URL을 받아 표준 리뷰 절차를 시작한다."""
