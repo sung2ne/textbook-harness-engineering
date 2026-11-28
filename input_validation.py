@@ -1,7 +1,7 @@
 SUSPICIOUS_PATTERNS = [
     "이전 지시", "ignore previous", "system:", "assistant:",
     "<|im_start|>", "<|im_end|>",  # OpenAI ChatML 구분자
-    "Human:", "Assistant:",         # Anthropic 구분자
+    "Human:", "Assistant:",         # 옛 Anthropic Text Completions 형식의 구분자
 ]
 
 

@@ -2,7 +2,7 @@ import asyncio
 import os
 from agents import Agent, Runner
 from agents.mcp import MCPServerStreamableHttp
-from prompts import SYSTEM_PROMPT
+from review_prompts import SYSTEM_PROMPT
 from cost_tracker import CostTracker
 from schema import ReviewInput, ReviewOutput, ReviewDraft
 
@@ -35,8 +35,8 @@ async def _run_async(input: ReviewInput, hooks=None) -> ReviewOutput:
     draft: ReviewDraft = result.final_output
     usage = result.context_wrapper.usage
     cached = usage.input_tokens_details.cached_tokens
-    # OpenAI의 입력 토큰 수는 캐시에서 읽은 분량을 포함한다. 일반 입력과 캐시 읽기로 나눠 넘긴다
-    cost.add_usage(usage.input_tokens - cached, usage.output_tokens, cache_read=cached)
+    written = usage.input_tokens_details.cache_write_tokens  # 입력 토큰 수는 캐시 읽기·쓰기 분량을 포함한다
+    cost.add_usage(usage.input_tokens - cached - written, usage.output_tokens, cache_read=cached, cache_write=written)
     return ReviewOutput(
         summary=draft.summary,
         comments=draft.comments[:5],

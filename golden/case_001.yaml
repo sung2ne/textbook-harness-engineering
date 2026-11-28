@@ -18,10 +18,14 @@ expected_violations:
     severity: warning
     file: UserController.java
     description: "외부 입력(Map)을 검증 없이 사용"
+  - rule_id: 1
+    severity: warning
+    file: UserController.java
+    description: "새 엔드포인트에 테스트 변경 없음"
 expected_score:
   detect_rate: 30
   false_positive: 20
   tone: 20
   specificity: 12
-  rule_match: 14
-  total: 96
+  rule_match: 15
+  total: 97
