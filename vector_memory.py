@@ -18,9 +18,8 @@ class VectorMemory:
 
     def recall(self, query: str, top_k: int = 5) -> list[str]:
         query_embedding = embed(query)
-        results = self.store.query(
+        return self.store.query(
             vector=query_embedding,
             filter={"user_id": self.user_id},
             top_k=top_k,
         )
-        return [r["metadata"]["text"] for r in results]
