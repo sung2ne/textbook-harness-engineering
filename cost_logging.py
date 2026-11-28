@@ -1,6 +1,6 @@
 # 토큰 1개당 USD. 2026-11-26 공식 가격표 기준이며 가격은 자주 바뀝니다.
 # Anthropic: https://platform.claude.com/docs/en/about-claude/pricing (claude-haiku-5-5는 프롬프트 10만 토큰 이하 단가)
-# OpenAI: https://developers.openai.com/api/docs/pricing (캐시 쓰기 요금이 없어 input_cache_write는 input과 같게 둠)
+# OpenAI: https://developers.openai.com/api/docs/pricing (2026-11-28 확인. 272K 토큰 이하 단가. input_cache_write는 기본 30분 캐시 쓰기로 입력의 1.25배이고, 12시간 쓰기는 2.5배)
 # thinking 토큰은 출력 토큰으로 청구되므로 output 단가를 적용합니다.
 COST_TABLE = {
     "claude-opus-5-5": {
@@ -15,7 +15,7 @@ COST_TABLE = {
         "input_cache_write": 0.125 / 1_000_000,
         "output": 0.50 / 1_000_000,
     },
-    "claude-haiku-4-5": {
+    "claude-haiku-4-5": {  # 이전 세대 경량 모델(본문 코드는 쓰지 않음)
         "input": 1.0 / 1_000_000,
         "input_cached": 0.10 / 1_000_000,
         "input_cache_write": 1.25 / 1_000_000,
@@ -24,13 +24,13 @@ COST_TABLE = {
     "gpt-6.1-sol": {
         "input": 2.0 / 1_000_000,
         "input_cached": 0.10 / 1_000_000,
-        "input_cache_write": 2.0 / 1_000_000,
+        "input_cache_write": 2.50 / 1_000_000,  # 30분 캐시 쓰기
         "output": 10.0 / 1_000_000,
     },
     "gpt-6.1-terra": {
         "input": 1.0 / 1_000_000,
         "input_cached": 0.05 / 1_000_000,
-        "input_cache_write": 1.0 / 1_000_000,
+        "input_cache_write": 1.25 / 1_000_000,  # 30분 캐시 쓰기
         "output": 5.0 / 1_000_000,
     },
 }
@@ -45,7 +45,8 @@ def estimate_cost(
 ) -> float:
     """input_tokens는 캐시 토큰을 뺀 입력 토큰입니다(Anthropic 응답의 usage.input_tokens).
 
-    OpenAI의 usage.prompt_tokens는 캐시 읽기를 포함하므로, 캐시 읽기를 빼서 넘깁니다.
+    OpenAI의 입력 토큰 수(Responses는 usage.input_tokens, Chat Completions는 usage.prompt_tokens)는
+    캐시 읽기(cached_tokens)와 캐시 쓰기(cache_write_tokens)를 포함하므로, 둘을 빼서 넘깁니다.
     """
     rates = COST_TABLE[model]
     return (

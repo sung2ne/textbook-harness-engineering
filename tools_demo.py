@@ -1,3 +1,8 @@
+from mcp.server import MCPServer
+
+mcp = MCPServer("policy-server")
+
+
 @mcp.tool()
 def create_jira_ticket(project: str, title: str, description: str) -> dict:
     """Jira에 새 티켓을 생성한다.
