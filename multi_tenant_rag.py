@@ -7,6 +7,9 @@ class RequestContext:
 
 
 class MultiTenantRAG:
+    def __init__(self, store):
+        self.store = store
+
     def search(self, query: str, ctx: RequestContext) -> list[str]:
         return self.store.query(
             embed(query),

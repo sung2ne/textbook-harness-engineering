@@ -11,7 +11,7 @@ class MCPClient:
         self._loop = asyncio.new_event_loop()
         threading.Thread(target=self._loop.run_forever, daemon=True).start()
         self._client = Client(url)
-        self._run(self._client.__aenter__())  # 서버에 연결하고 initialize 핸드셰이크를 한다
+        self._run(self._client.__aenter__())  # 서버에 연결하고 프로토콜을 협상한다(server/discover를 먼저 시도하고, 옛 서버면 initialize)
 
     @classmethod
     def connect(cls, url: str) -> "MCPClient":
