@@ -1,3 +1,6 @@
+from good_separation import UserMemory
+
+
 def answer(user_id: str, query: str) -> str:
     # 1. RAG에서 공통 지식 검색
     common_facts = rag_system.search(query)

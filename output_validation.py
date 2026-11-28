@@ -6,7 +6,7 @@ SECRET_PATTERNS = [
     re.compile(r"-----BEGIN.*PRIVATE KEY"),  # 개인키
 ]
 
-DANGEROUS_COMMANDS = ["rm -rf", "DROP TABLE", "git push --force"]
+DANGEROUS_COMMANDS = ["rm -rf", "DROP TABLE", "git push --force", "git push -f"]
 
 
 def is_safe_output(text: str) -> tuple[bool, str]:
@@ -14,6 +14,6 @@ def is_safe_output(text: str) -> tuple[bool, str]:
         if p.search(text):
             return (False, "secret_detected")
     for cmd in DANGEROUS_COMMANDS:
-        if cmd in text:
+        if cmd.lower() in text.lower():
             return (False, "dangerous_command")
     return (True, "")
