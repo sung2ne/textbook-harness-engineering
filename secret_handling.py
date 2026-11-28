@@ -5,7 +5,7 @@ import re
 # 1. 응답 마스킹
 SECRET_PATTERNS = [
     re.compile(r"sk-[a-zA-Z0-9_-]{20,}"),   # API 키
-    re.compile(r"Bearer\s+[a-zA-Z0-9._-]+"),  # Bearer 토큰
+    re.compile(r"Bearer\s+[A-Za-z0-9._~+/-]+=*"),  # Bearer 토큰(RFC 6750 b64token)
 ]
 
 def mask_secrets(text: str) -> str:

@@ -1,8 +1,11 @@
+from anthropic import Anthropic
+
 MODEL = "claude-opus-5-5"
+client = Anthropic()
 
 response = client.messages.create(
     model=MODEL,
-    max_tokens=1024,
+    max_tokens=4096,  # thinking 토큰도 max_tokens 안에서 쓰인다
     system=[
         {
             "type": "text",

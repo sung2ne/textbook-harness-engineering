@@ -1,3 +1,8 @@
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+
 def call_with_tags(team: str, project: str, message: str):
     with tracer.start_as_current_span("agent.run") as span:
         span.set_attribute("company.team", team)
