@@ -1,4 +1,4 @@
-sum(rate(traces_spanmetrics_calls_total{
+sum(rate(traces_span_metrics_calls_total{
   service_name="code-review-agent",
   span_name="agent.run"
-}[1m])) * 60
+}[5m])) * 60

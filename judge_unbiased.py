@@ -1,3 +1,19 @@
+import os
+
+from openai import OpenAI
+
+from judge_basic import JUDGE_PROMPT
+
+client = OpenAI()
+JUDGE_MODEL = os.environ.get("OPENAI_MODEL", "gpt-6.1-sol")  # 후보(Claude)와 다른 가족의 판정 모델
+
+
+def call_judge(prompt: str) -> str:
+    """판정 모델에 묻고 답의 첫 글자("A" 또는 "B")만 돌려준다"""
+    response = client.responses.create(model=JUDGE_MODEL, input=prompt)
+    return response.output_text.strip()[:1]
+
+
 def judge(response_a, response_b, diff) -> str:
     # 1차: A가 먼저
     result_1 = call_judge(JUDGE_PROMPT.format(
