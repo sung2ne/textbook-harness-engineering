@@ -8,7 +8,7 @@ groups:
           severity: page
         annotations:
           summary: "시간당 비용 $10 초과"
-          runbook_url: "https://wiki.company.com/runbooks/llm-cost-surge"
+          runbook_url: "https://wiki.example.com/runbooks/llm-cost-surge"
           description: |
             절차:
             1. trace의 사용자별 집계(app.user.id)에서 비정상 사용자 식별

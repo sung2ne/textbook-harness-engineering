@@ -20,10 +20,10 @@ class ReviewState(TypedDict):
     cost: CostTracker
 
 
-from prompts import SYSTEM_PROMPT
+from review_prompts import SYSTEM_PROMPT
 
 MODEL = os.environ.get("ANTHROPIC_AGENT_MODEL", "claude-opus-5-5")
-llm = ChatAnthropic(model=MODEL, max_tokens=4096)  # thinking 토큰도 max_tokens 안에서 쓰인다
+llm = ChatAnthropic(model=MODEL, max_tokens=16000)  # thinking 토큰도 max_tokens 안에서 쓰인다
 mcp = MCPClient.connect("http://localhost:8765/mcp")  # Ch 02에서 띄운 서버
 
 
@@ -40,7 +40,7 @@ def _track(cost: CostTracker, response):
     usage = response.usage_metadata
     details = usage.get("input_token_details", {})
     cache_read = details.get("cache_read", 0)
-    cache_write = details.get("cache_creation", 0)
+    cache_write = details.get("cache_creation", 0) + details.get("ephemeral_5m_input_tokens", 0) + details.get("ephemeral_1h_input_tokens", 0)  # TTL별 값이 있으면 cache_creation은 0이 된다
     cost.add_usage(usage["input_tokens"] - cache_read - cache_write, usage["output_tokens"], cache_read, cache_write)
 
 
@@ -90,11 +90,11 @@ def generate_comments(state: ReviewState) -> ReviewState:
 
     try:
         parsed = json.loads(_strip_json_fence(response.text))
-        comments = [ReviewComment(**c) for c in parsed["comments"]]
+        summary, comments = parsed["summary"], [ReviewComment(**c) for c in parsed["comments"]]
     except (json.JSONDecodeError, KeyError, TypeError) as e:
         # 형식이 틀리면 예외로 끝내지 않고 오류를 상태에 남겨 재시도로 넘긴다
         return {**state, "draft_comments": [], "validation_errors": [f"형식 오류: {e}"], "iterations": iterations}
-    return {**state, "summary": parsed["summary"], "draft_comments": comments,
+    return {**state, "summary": summary, "draft_comments": comments,
             "validation_errors": [], "iterations": iterations}
 
 
@@ -136,7 +136,7 @@ graph.add_edge("parse_input", "analyze_diff")
 graph.add_edge("analyze_diff", "search_related_policies")
 graph.add_edge("search_related_policies", "generate_comments")
 graph.add_edge("generate_comments", "validate_output")
-graph.add_conditional_edges("validate_output", should_retry)
+graph.add_conditional_edges("validate_output", should_retry, ["generate_comments", END])  # 갈 수 있는 노드를 적어야 그래프 그림에 재시도 엣지가 나온다
 
 review_graph = graph.compile()
 

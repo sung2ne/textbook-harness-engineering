@@ -1,4 +1,4 @@
-histogram_quantile(0.50, sum by (le) (rate(traces_spanmetrics_latency_bucket{
+histogram_quantile(0.50, sum by (le) (rate(traces_span_metrics_duration_milliseconds_bucket{
   service_name="code-review-agent",
   span_name="agent.run"
 }[5m])))
