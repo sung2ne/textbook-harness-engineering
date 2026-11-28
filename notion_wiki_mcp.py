@@ -13,7 +13,7 @@ def search_wiki(query: str) -> list[dict]:
     return [
         {
             "id": r["id"],
-            "title": r["properties"]["title"]["title"][0]["plain_text"],
+            "title": next((p["title"][0]["plain_text"] for p in r["properties"].values() if p["type"] == "title" and p["title"]), ""),
             "url": r["url"],
         }
         for r in res["results"][:5]
