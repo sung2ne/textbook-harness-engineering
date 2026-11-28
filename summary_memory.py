@@ -7,7 +7,7 @@ class SummaryMemory:
         return db.get_summary(self.user_id) or ""
 
     def update(self, conversation: list[dict]):
-        new_summary = call_summarizer(
+        new_summary = call_memory_summarizer(
             previous_summary=self.summary,
             new_conversation=conversation,
         )

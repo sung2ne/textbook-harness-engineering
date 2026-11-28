@@ -12,7 +12,7 @@ class WikiTokenVerifier(TokenVerifier):
         """Bearer 토큰을 검증해 호출자 정보를 돌려준다. 실패하면 None(서버가 401로 응답)."""
         # 실제로는 사내 인증 서비스 호출
         if token == os.environ.get("DEV_TOKEN"):
-            return AccessToken(token=token, client_id="dev-user", scopes=["wiki:read"], resource=RESOURCE)
+            return AccessToken(token=token, client_id="dev-client", subject="dev-user", scopes=["wiki:read"], resource=RESOURCE)
         return None
 
 

@@ -1,3 +1,8 @@
+from opentelemetry import trace
+
+tracer = trace.get_tracer(__name__)
+
+
 def run_tool(name: str, tool_input: dict, fn):
     with tracer.start_as_current_span(f"execute_tool {name}") as span:
         span.set_attribute("gen_ai.operation.name", "execute_tool")

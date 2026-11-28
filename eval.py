@@ -72,7 +72,7 @@ def evaluate(case_path: str, agent_run_fn) -> dict:
     # 점수화
     detect = score_detect_rate(output.comments, case["expected_violations"])
     fp = score_false_positive(output.comments, case["expected_violations"])
-    tone = score_tone(output.comments)  # LLM judge
+    tone = score_tone(output.comments)  # LLM judge 자리를 금칙어 검사로 대신
     spec = score_specificity(output.comments)
     rule = score_rule_match(output.comments, case["expected_violations"])
 
@@ -89,7 +89,7 @@ def evaluate(case_path: str, agent_run_fn) -> dict:
 
 
 def evaluate_all(agent_run_fn, agent_name: str, limit: int = 50) -> dict:
-    paths = sorted(glob.glob("golden/case_*.yaml"))[:limit]  # golden/에 있는 케이스 수까지만 돈다
+    paths = sorted(glob.glob("golden/case_[0-9][0-9][0-9].yaml"))[:limit]  # golden/에 있는 케이스 수까지만 돈다
     results, failures = [], {}
     for path in paths:
         try:
