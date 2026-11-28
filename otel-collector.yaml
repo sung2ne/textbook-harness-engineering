@@ -1,0 +1,45 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+
+connectors:
+  span_metrics:
+    dimensions:
+      - name: gen_ai.provider.name
+      - name: gen_ai.tool.name
+
+processors:
+  tail_sampling:
+    policies:
+      - name: errors
+        type: status_code
+        status_code: {status_codes: [ERROR]}
+      - name: slow
+        type: latency
+        latency: {threshold_ms: 5000}
+      - name: normal
+        type: probabilistic
+        probabilistic: {sampling_percentage: 1}
+
+exporters:
+  otlp_grpc/tempo:
+    endpoint: tempo:4317
+    tls:
+      insecure: true
+  otlp_http/prometheus:
+    metrics_endpoint: http://prometheus:9090/api/v1/otlp/v1/metrics
+
+service:
+  pipelines:
+    traces/metrics:  # 샘플링 없이 모든 span을 커넥터로 보낸다
+      receivers: [otlp]
+      exporters: [span_metrics]
+    traces/sampled:  # 샘플링한 trace만 Tempo에 저장한다
+      receivers: [otlp]
+      processors: [tail_sampling]
+      exporters: [otlp_grpc/tempo]
+    metrics/spans:
+      receivers: [span_metrics]
+      exporters: [otlp_http/prometheus]
