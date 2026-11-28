@@ -1,3 +1,6 @@
+from secret_handling import mask_secrets  # PART 04 Ch 04
+
+
 def safe_record_input(span, input_text: str):
     masked = mask_secrets(input_text)
     truncated = masked[:500] + "..." if len(masked) > 500 else masked
