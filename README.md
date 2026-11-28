@@ -6,7 +6,7 @@
 
 ## 브랜치
 
-`part{PART 번호}/chapter-{장 번호}` 브랜치는 그 장까지의 코드가 누적된 상태입니다. 예를 들어 `part08/chapter-02`는 PART 08 Ch 02를 끝낸 시점의 파일 전체입니다. 코드 블록이 없는 장에는 브랜치가 없습니다. `main`은 책 끝 시점의 전체 파일입니다.
+`part{PART 번호}/chapter-{장 번호}` 브랜치는 그 장까지의 코드가 누적된 상태입니다. 예를 들어 `part08/chapter-02`는 PART 08 Ch 02를 끝낸 시점의 파일 전체입니다. 첫 줄이 `# 파일: 이름`인 코드 블록이 없는 장에는 브랜치가 없습니다. `main`은 책 끝 시점의 전체 파일입니다.
 
 ```bash
 git clone https://github.com/sung2ne/textbook-harness-engineering.git
