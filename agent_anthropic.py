@@ -1,7 +1,7 @@
 import os
 from anthropic import Anthropic
 from mcp_client import MCPClient
-from prompts import SYSTEM_PROMPT
+from review_prompts import SYSTEM_PROMPT
 from cost_tracker import CostTracker
 from schema import ReviewInput, ReviewOutput, ReviewComment
 import json
@@ -35,7 +35,7 @@ def run(input: ReviewInput) -> ReviewOutput:
 
         response = client.messages.create(
             model=MODEL,
-            max_tokens=4096,
+            max_tokens=16000,  # thinking 토큰도 max_tokens 안에서 쓰인다
             system=[{
                 "type": "text",
                 "text": SYSTEM_PROMPT,
