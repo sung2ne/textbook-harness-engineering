@@ -1,3 +1,6 @@
+from trajectory import Trajectory
+
+
 def detect_hallucination(trajectory: Trajectory) -> bool:
     tool_facts = extract_facts_from_tool_results(trajectory)
     answer_facts = extract_facts_from_answer(trajectory.final_output)
