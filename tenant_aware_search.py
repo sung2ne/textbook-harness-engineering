@@ -1,3 +1,4 @@
+# wiki_mcp_auth.py의 mcp에 이어 붙이는 조각이다. wiki_db와 lookup_caller는 서버가 구현한다
 from mcp.server.auth.middleware.auth_context import get_access_token
 
 
@@ -5,7 +6,9 @@ from mcp.server.auth.middleware.auth_context import get_access_token
 def search_wiki(query: str) -> list[dict]:
     """사내 위키 검색. 호출자의 org_id 안에서만 검색한다."""
     token = get_access_token()  # 검증기가 확인한 호출자
-    caller = lookup_caller(token.client_id)  # 사내 디렉터리에서 org_id·team_ids 조회(조회 함수는 서버가 구현)
+    if token is None or token.subject is None:
+        return []  # 호출자를 모르면 기본 거부
+    caller = lookup_caller(token.subject)  # 토큰의 sub(사용자)로 org_id·team_ids 조회. client_id는 호스트 앱 식별자라 쓰지 않는다
     org_id = caller["org_id"]
 
     # org_id 기반으로 검색 범위를 자동 제한
